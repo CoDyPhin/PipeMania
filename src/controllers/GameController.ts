@@ -4,18 +4,22 @@ import {
 } from 'pixi.js';
 
 // Project imports
+// View
 import { GameView } from '../views/GameView';
+// Controller
+import { ObjectManager } from './ObjectManager';
+// Helpers
 import { GameConstants } from '../helpers/GameConstants';
 
 export class GameController {
 
   constructor() {
-    const ticker = GameView.getInstance().getTicker();
+    const ticker = GameView.getInstance().getApp().ticker;
     ticker.add(this.update.bind(this));
-    ticker.maxFPS = GameConstants.DEFAULT_MAX_FPS; 
+    ticker.maxFPS = GameConstants.MAX_FPS; 
   }
 
   private update(ticker: PIXITicker): void {
-    console.log("Game is updating. DeltaTime (ms):", ticker.deltaTime);
+    ObjectManager.getInstance().update(ticker);
   }
 }

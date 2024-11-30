@@ -1,7 +1,6 @@
 // PixiJS imports
 import {
     Application as PIXIApplication,
-    Ticker      as PIXITicker
 } from 'pixi.js';
 
 // Project imports
@@ -18,11 +17,11 @@ export class GameView {
   private constructor() {
     this.app         = new PIXIApplication();
     this.initPromise = this.app.init({ 
-        width:            GameConstants.DEFAULT_GAME_WIDTH, 
-        height:           GameConstants.DEFAULT_GAME_HEIGHT, 
-        backgroundColor:  GameConstants.DEFAULT_BACKGROUND_COLOR,
+        width:            GameConstants.GAME_WIDTH, 
+        height:           GameConstants.GAME_HEIGHT, 
+        backgroundColor:  GameConstants.BACKGROUND_COLOR,
         // By using resizeTo: window we're not maintaining aspect ratio. This may reduce the visual quality of the game
-        resizeTo:         window
+        resizeTo :        GameConstants.RESIZE_TO_WINDOW ? window : undefined
       }).then(() => {
           document.body.appendChild(this.app.canvas);
           console.log("Canvas initialized!");
@@ -36,8 +35,8 @@ export class GameView {
     return GameView.instance;
   }
 
-  public getTicker(): PIXITicker {
-    return this.app.ticker;
+  public getApp(): PIXIApplication {
+    return this.app;
   }
 
   public getInitPromise(): Promise<void> {
