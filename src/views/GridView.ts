@@ -14,11 +14,10 @@ export class GridView {
   }
 
   public drawGrid(): void {
-    for (let rowID = 0; rowID < this.gridModel.grid.length; ++rowID) {
-      for (let colID = 0; colID < this.gridModel.grid[rowID].length; ++colID) {
-        const cell = this.gridModel.grid[rowID][colID] as GridCellObject;
+    this.gridModel.grid.forEach(row => {
+      row.forEach(cell => {
         cell.getView().drawCell();
-      }
-    }
+      });
+    });
   }
 }
