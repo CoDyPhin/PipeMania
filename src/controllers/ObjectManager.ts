@@ -6,9 +6,6 @@ import {
 // Project imports
 import { GameView } from '../views/GameView';
 import { GameObject } from '../models/GameObject';
-import { ObjectType } from '../helpers/Enums';
-import { ObjectFactory } from '../factories/ObjectFactory';
-
 
 export class ObjectManager {
   private static instance: ObjectManager;
@@ -29,22 +26,22 @@ export class ObjectManager {
     });
   }
 
-  public createObject(objectType: ObjectType = ObjectType.BASIC, activate : boolean = true): GameObject {
-    const object = ObjectFactory.createObject(objectType);
+  public addObject(object: GameObject): void {
     if (this.objectMap.has(object.getUId())){
       console.log(`Object already exists, updating it: ${object.getUId()}`);
       this.deleteObject(object.getUId());
     }
     this.objectMap.set(object.getUId(), object);
-    if (activate) this.activateObject(object.getUId());
-    return object;
+    this.activateObject(object.getUId(), true);
   }
 
-  public activateObject(objectID: string): void {
+  public activateObject(objectID: string, isNewObj = false): void {
     let object = this.objectMap.get(objectID);
-    if (!object || object.isActive()) return;
-    GameView.getInstance().getApp().stage.addChild(object!);
-    object!.onActivate();
+    if (!object || object.isActive()) {
+      if (!isNewObj) return;
+      GameView.getInstance().getApp().stage.addChild(object!);
+      object!.onActivate();
+    }
   }
 
   public deactivateObject(objectID: string): void {

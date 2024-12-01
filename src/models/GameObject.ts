@@ -16,7 +16,7 @@ export class GameObject extends PIXIContainer {
     super();
     this.typeId = pType;
     this.id     = pID;
-    this.active = false;
+    this.active = true;
   }
 
   public onActivate(): void {
@@ -45,6 +45,5 @@ export class GameObject extends PIXIContainer {
 
   public update(ticker: PIXITicker): void {
     if (!this.isActive()) return;
-    this.rotation += 0.01;
   }
 }
