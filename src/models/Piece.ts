@@ -1,6 +1,3 @@
-// PixiJS imports
-import { Graphics as PIXIGraphics } from "pixi.js";
-
 // Project imports
 import { PieceType } from "../helpers/Enums";
 
@@ -14,5 +11,4 @@ export class Piece {
     return this.pieceType;
   }
 
-  public drawPiece(cell: PIXIGraphics, width: number, height: number): void {}
 }

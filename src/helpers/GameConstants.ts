@@ -27,5 +27,6 @@ export class GameConstants {
   public static readonly GRID_CELL_BORDER: number  = 0.1;
   public static readonly GRID_SIZE:        number  = 0.6;
   public static readonly PIPE_SIZE:        number  = 0.25;
+  public static readonly N_DIRECTIONS:     number  = 4;
   
 }
