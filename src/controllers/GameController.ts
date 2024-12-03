@@ -4,21 +4,23 @@ import {
 } from 'pixi.js';
 
 // Project imports
-// View
-import { GameView } from '../views/GameView';
-// Controller
-import { ObjectManager } from './ObjectManager';
+import { GameView }       from '../views/GameView';
+import { ObjectManager }  from './ObjectManager';
 import { GridController } from './GridController';
-// Helpers
-import { GameConstants } from '../helpers/GameConstants';
+import { UIController }   from './UIController';
+import { GameConstants }  from '../helpers/GameConstants';
 
 export class GameController {
+  private gridController: GridController
+  private uiController:   UIController;
 
   constructor() {
     const ticker = GameView.getInstance().getApp().ticker;
     ticker.add(this.update.bind(this));
     ticker.maxFPS = GameConstants.MAX_FPS;
-    new GridController();
+
+    this.gridController = new GridController();
+    this.uiController   = new UIController();
   }
 
   private update(ticker: PIXITicker): void {

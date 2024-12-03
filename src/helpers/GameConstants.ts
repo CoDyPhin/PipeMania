@@ -31,5 +31,5 @@ export class GameConstants {
   public static readonly START_PIPE_COLOR: number  = Color.YELLOW;
   public static readonly BLOCK_COLOR:      number  = Color.RED;
   public static readonly N_DIRECTIONS:     number  = 4;
-  public static readonly MAX_BLOCKS:       number  = 5;
+  public static readonly MAX_BLOCKS:       number  = 10;
 }

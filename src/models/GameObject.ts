@@ -43,7 +43,7 @@ export class GameObject extends PIXIContainer {
     this.removeChildren();
   }
 
-  public update(ticker: PIXITicker): void {
+  public update(_: PIXITicker): void {
     if (!this.isActive()) return;
   }
 }

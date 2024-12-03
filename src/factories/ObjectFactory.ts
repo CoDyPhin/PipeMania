@@ -1,7 +1,7 @@
 // Project imports
-import { ObjectType } from "../helpers/Enums";
-import { GameObject } from "../models/GameObject";
-import { GridObject } from "../models/GridObject";
+import { ObjectType }     from "../helpers/Enums";
+import { GameObject }     from "../models/GameObject";
+import { GridObject }     from "../models/GridObject";
 import { GridCellObject } from "../models/GridCellObject";
 
 export class ObjectFactory {
@@ -14,9 +14,9 @@ export class ObjectFactory {
     return object;
   }
 
-  public static createGridCell(col: number, row: number): GameObject {
+  public static createGridCell(col: number, row: number, mainGrid: GridObject): GameObject {
     let currentID = ObjectFactory.objectIDMap.has(ObjectType.GRID_CELL) ? ObjectFactory.objectIDMap.get(ObjectType.GRID_CELL)! : 1;
-    const object  = new GridCellObject(currentID, col, row);
+    const object  = new GridCellObject(currentID, col, row, mainGrid);
     ObjectFactory.objectIDMap.set(ObjectType.GRID_CELL, ++currentID);
     return object;
   }

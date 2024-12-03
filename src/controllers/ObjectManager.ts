@@ -4,7 +4,7 @@ import {
 } from 'pixi.js';
 
 // Project imports
-import { GameView } from '../views/GameView';
+import { GameView }   from '../views/GameView';
 import { GameObject } from '../models/GameObject';
 
 export class ObjectManager {

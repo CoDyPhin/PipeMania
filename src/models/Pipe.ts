@@ -2,8 +2,8 @@
 
 // Project imports
 import { PieceType, PipeConnections } from "../helpers/Enums";
-import { GameConstants } from "../helpers/GameConstants";
-import { Piece } from "./Piece";
+import { GameConstants }              from "../helpers/GameConstants";
+import { Piece }                      from "./Piece";
 
 export class Pipe extends Piece {
   private pipeConnections: PipeConnections = PipeConnections.NONE;
