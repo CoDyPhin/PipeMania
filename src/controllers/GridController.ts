@@ -154,14 +154,4 @@ export class GridController {
     }
   }
 
-  private generateRandomPipe(): Pipe {
-    let bitmask = (1 << GameConstants.N_DIRECTIONS) - 1;
-    const bitsToFlip = Math.floor(Math.random() * (GameConstants.N_DIRECTIONS - 1));
-    for (let i = 0; i < bitsToFlip; i++) {
-      const randomBit = Math.floor(Math.random() * GameConstants.N_DIRECTIONS);
-      bitmask &= ~(1 << randomBit);
-    }
-    return new Pipe(bitmask);
-  }
-
 }
