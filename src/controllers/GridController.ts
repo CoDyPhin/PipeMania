@@ -10,12 +10,16 @@ import { GridObject }                 from "../models/GridObject";
 import { GridCellObject }             from "../models/GridCellObject";
 import { Pipe }                       from "../models/Pipe";
 import { Piece }                      from "../models/Piece";
+import { PipeQueue }                  from "../models/PipeQueue";
 
 import { GridView }                   from "../views/GridView";
+import { PipeQueueView }              from "../views/PipeQueueView";
 
 export class GridController {
-  private gridModel: GridObject;
-  private gridView:  GridView;
+  private gridModel:     GridObject;
+  private gridView:      GridView;
+  private pipeQueue:     PipeQueue;
+  private pipeQueueView: PipeQueueView;
 
   constructor() {
     const gridObj  = ObjectFactory.createGrid(GameConstants.GRID_SIZE);
@@ -24,17 +28,26 @@ export class GridController {
     this.setupGrid(GameConstants.GRID_COLS, GameConstants.GRID_ROWS);
     this.gridView = new GridView(this.gridModel);
     this.gridView.drawGrid();
+
+    const pipeQueue = ObjectFactory.createPipeQueue();
+    this.pipeQueue  = pipeQueue as PipeQueue;
+    ObjectManager.getInstance().addObject(pipeQueue);
+    this.pipeQueueView = new PipeQueueView(this.pipeQueue);
+    this.pipeQueueView.drawPipeQueue();
+
     window.addEventListener("resize", this.onResize.bind(this));
   }
 
   private onResize(): void {
     this.gridModel.onResize();
     this.gridView.drawGrid();
+    this.pipeQueueView.drawPipeQueue();
   }
 
   private onCellClick(cell: GridCellObject): void {
-    cell.setPiece(this.generateRandomPipe());
+    cell.setPiece(this.pipeQueue.getNextPipe());
     this.updateConnections(cell);
+    this.pipeQueueView.drawPipeQueue();
     this.gridView.drawGrid();
   }
 
@@ -71,11 +84,12 @@ export class GridController {
     for (let i = 0; i < nBlocks; ++i) {
       const randomIndex = Math.floor(Math.random() * availablePositions.length);
       const {col, row} = availablePositions[randomIndex];
-      availablePositions[randomIndex] = availablePositions[availablePositions.length - 1];
-      availablePositions.pop();
       const cell = this.gridModel.getGrid()[row][col];
       cell.setPiece(new Piece(PieceType.BLOCK));
       cell.interactive = false;
+
+      availablePositions[randomIndex] = availablePositions[availablePositions.length - 1];
+      availablePositions.pop();
     }
   }
 
@@ -130,7 +144,7 @@ export class GridController {
       if (!(connections & direction)) continue;
 
       const {colDiff, rowDiff} = this.getConnectionCoords(direction);
-      if (this.checkIfInBounds(cell.getCol() + colDiff, cell.getRow() + rowDiff)) continue;
+      if (!this.checkIfInBounds(cell.getCol() + colDiff, cell.getRow() + rowDiff)) continue;
       
       const neighbor = this.gridModel.getCell(cell.getCol() + colDiff, cell.getRow() + rowDiff);
       if (neighbor.getPiece().getPieceType() === PieceType.PIPE) {

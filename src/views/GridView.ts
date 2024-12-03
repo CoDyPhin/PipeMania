@@ -8,8 +8,11 @@ export class GridView {
   private gridView:  Array<Array<GridCellView>> = new Array();
   constructor(gridModel: GridObject) {
     this.gridModel = gridModel;
-    const cellFrac = gridModel.getViewSize() / Math.max(this.gridModel.getGrid().length, this.gridModel.getGrid()[0].length);
-    this.gridModel.getGrid().forEach((row, rowID) => {
+    const grid     = this.gridModel.getGrid();
+    const maxDim   = Math.max(grid.length, grid[0].length);
+    const cellFrac = gridModel.getViewSize() / maxDim;
+    
+    grid.forEach((row, rowID) => {
       this.gridView.push(new Array());
       row.forEach(cell => {
         const view = new GridCellView(cell, cellFrac, cellFrac, GameConstants.GRID_CELL_BORDER);

@@ -3,6 +3,7 @@ import { ObjectType }     from "../helpers/Enums";
 import { GameObject }     from "../models/GameObject";
 import { GridObject }     from "../models/GridObject";
 import { GridCellObject } from "../models/GridCellObject";
+import { PipeQueue }      from "../models/PipeQueue";
 
 export class ObjectFactory {
   private static objectIDMap: Map<ObjectType, number> = new Map();
@@ -11,6 +12,7 @@ export class ObjectFactory {
     let currentID = ObjectFactory.objectIDMap.has(ObjectType.GRID) ? ObjectFactory.objectIDMap.get(ObjectType.GRID)! : 1;
     const object  = new GridObject(currentID, screenFraction);
     ObjectFactory.objectIDMap.set(ObjectType.GRID, ++currentID);
+    
     return object;
   }
 
@@ -18,6 +20,15 @@ export class ObjectFactory {
     let currentID = ObjectFactory.objectIDMap.has(ObjectType.GRID_CELL) ? ObjectFactory.objectIDMap.get(ObjectType.GRID_CELL)! : 1;
     const object  = new GridCellObject(currentID, col, row, mainGrid);
     ObjectFactory.objectIDMap.set(ObjectType.GRID_CELL, ++currentID);
+
+    return object;
+  }
+
+  public static createPipeQueue(): GameObject {
+    let currentID = ObjectFactory.objectIDMap.has(ObjectType.PIPEQUEUE) ? ObjectFactory.objectIDMap.get(ObjectType.PIPEQUEUE)! : 1;
+    const object  = new PipeQueue(currentID);
+    ObjectFactory.objectIDMap.set(ObjectType.PIPEQUEUE, ++currentID);
+
     return object;
   }
 }

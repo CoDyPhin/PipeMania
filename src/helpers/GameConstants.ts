@@ -17,19 +17,24 @@ export class Color {
 }
 
 export class GameConstants {
-  public static readonly GAME_WIDTH:       number  = window.innerWidth;
-  public static readonly GAME_HEIGHT:      number  = window.innerHeight;
-  public static readonly BACKGROUND_COLOR: number  = Color.LIGHT_GRAY;
-  public static readonly RESIZE_TO_WINDOW: boolean = true;
-  public static readonly MAX_FPS:          number  = 60;
-  public static readonly GRID_COLS:        number  = 9;
-  public static readonly GRID_ROWS:        number  = 7;
-  public static readonly GRID_CELL_BORDER: number  = 0.1;
-  public static readonly GRID_SIZE:        number  = 0.6;
-  public static readonly PIPE_SIZE:        number  = 0.25;
-  public static readonly PIPE_COLOR:       number  = Color.BLUE;
-  public static readonly START_PIPE_COLOR: number  = Color.YELLOW;
-  public static readonly BLOCK_COLOR:      number  = Color.RED;
-  public static readonly N_DIRECTIONS:     number  = 4;
-  public static readonly MAX_BLOCKS:       number  = 10;
+  public static readonly GAME_WIDTH:              number  = window.innerWidth;
+  public static readonly GAME_HEIGHT:             number  = window.innerHeight;
+  public static readonly BACKGROUND_COLOR:        number  = Color.LIGHT_GRAY;
+  public static readonly RESIZE_TO_WINDOW:        boolean = true;
+  public static readonly MAX_FPS:                 number  = 60;
+  public static readonly GRID_COLS:               number  = 9;
+  public static readonly GRID_ROWS:               number  = 7;
+  public static readonly GRID_CELL_BORDER:        number  = 0.1;
+  public static readonly GRID_SIZE:               number  = 0.7;
+  public static readonly PIPE_SIZE:               number  = 0.25;
+  public static readonly PIPE_COLOR:              number  = Color.BLUE;
+  public static readonly START_PIPE_COLOR:        number  = Color.YELLOW;
+  public static readonly BLOCK_COLOR:             number  = Color.RED;
+  public static readonly N_DIRECTIONS:            number  = 4;
+  public static readonly MAX_BLOCKS:              number  = 10;
+  public static readonly N_PIPES_IN_QUEUE:        number  = 4;
+  public static readonly PIPE_QUEUE_SIZE:         number  = 0.2;
+  public static readonly PIPE_QUEUE_BORDER_SIZE:  number  = 0.1;
+  public static readonly PIPE_QUEUE_BG_COLOR:     number  = Color.DARK_GRAY;
+  public static readonly PIPE_QUEUE_BORDER_COLOR: number  = Color.BLACK;
 }
