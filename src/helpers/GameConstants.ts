@@ -27,6 +27,9 @@ export class GameConstants {
   public static readonly GRID_CELL_BORDER: number  = 0.1;
   public static readonly GRID_SIZE:        number  = 0.6;
   public static readonly PIPE_SIZE:        number  = 0.25;
+  public static readonly PIPE_COLOR:       number  = Color.BLUE;
+  public static readonly START_PIPE_COLOR: number  = Color.YELLOW;
+  public static readonly BLOCK_COLOR:      number  = Color.RED;
   public static readonly N_DIRECTIONS:     number  = 4;
-  
+  public static readonly MAX_BLOCKS:       number  = 5;
 }

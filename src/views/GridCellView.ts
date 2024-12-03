@@ -47,50 +47,38 @@ export class GridCellView {
     this.cell.rect(0, 0, this.finalX, this.finalY);
     this.cell.fill(this.borderColor);
     this.cell.rect(0 + xBorder, 0 + yBorder, this.finalX - 2 * xBorder, this.finalY - 2 * yBorder);
-    this.cell.fill(this.fillColor);
-    this.drawPiece();
-  }
-
-  private drawPiece(): void {
     const piece = this.objModel.getPiece();
-    switch (piece.getPieceType()) {
-      case PieceType.NONE:
-        return;
-      case PieceType.BLOCK:
-        break;
-      case PieceType.PUMP:
-        break;
-      case PieceType.PIPE:
-        this.drawPipe(piece as Pipe);
-        break;
-    }
+    const color = piece.getPieceType() == PieceType.BLOCK ? GameConstants.BLOCK_COLOR : this.fillColor;
+    this.cell.fill(color);
+    if (piece.getPieceType() == PieceType.PIPE) this.drawPipe(piece as Pipe);
   }
 
   private drawPipe(pipe: Pipe): void {
-    if (pipe.getPipeType() < 2) return;
-    if (pipe.getPipeType() & PipeConnections.LEFT) {
+    let color = GameConstants.PIPE_COLOR;
+    if (pipe.getNumberOfConnections() === 1) color = GameConstants.START_PIPE_COLOR; 
+    if (pipe.getPipeConnections() & PipeConnections.LEFT) {
       const pipeHeight = GameConstants.PIPE_SIZE * this.finalY;
       const startY     = (this.finalY - pipeHeight) / 2;
       this.cell.rect(0, startY, this.finalX / 2, pipeHeight);
-      this.cell.fill(Color.BLUE);
+      this.cell.fill(color);
     }
-    if (pipe.getPipeType() & PipeConnections.RIGHT) {
+    if (pipe.getPipeConnections() & PipeConnections.RIGHT) {
       const pipeHeight = GameConstants.PIPE_SIZE * this.finalY;
       const startY     = (this.finalY - pipeHeight) / 2;
       this.cell.rect(this.finalX / 2, startY, this.finalX / 2, pipeHeight);
-      this.cell.fill(Color.BLUE);
+      this.cell.fill(color);
     }
-    if (pipe.getPipeType() & PipeConnections.UP) {
+    if (pipe.getPipeConnections() & PipeConnections.UP) {
       const pipeWidth = GameConstants.PIPE_SIZE * this.finalX;
       const startX    = (this.finalX - pipeWidth) / 2;
       this.cell.rect(startX, 0, pipeWidth, this.finalY / 2);
-      this.cell.fill(Color.BLUE);
+      this.cell.fill(color);
     }
-    if (pipe.getPipeType() & PipeConnections.DOWN) {
+    if (pipe.getPipeConnections() & PipeConnections.DOWN) {
       const pipeWidth = GameConstants.PIPE_SIZE * this.finalX;
       const startX    = (this.finalX - pipeWidth) / 2;
       this.cell.rect(startX, this.finalY / 2, pipeWidth, this.finalY / 2);
-      this.cell.fill(Color.BLUE);
+      this.cell.fill(color);
     }
   }
 }

@@ -7,7 +7,6 @@ export enum ObjectType {
 export enum PieceType {
   NONE,
   BLOCK,
-  PUMP, // Start Pipe
   PIPE
 }
 
@@ -17,10 +16,4 @@ export enum PipeConnections {
   RIGHT = 1 << 1,
   DOWN  = 1 << 2,
   LEFT  = 1 << 3,
-}
-
-export enum SceneID {
-  MAIN_MENU,
-  GAME,
-  SETTINGS_MENU
 }

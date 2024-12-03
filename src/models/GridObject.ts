@@ -25,4 +25,16 @@ export class GridObject extends GameObject {
   public setGrid(grid: Array<Array<GridCellObject>>): void {
     this.grid = grid;
   }
+
+  public getCell(col: number, row: number): GridCellObject {
+    return this.grid[row][col];
+  }
+
+  public addConnection(col1: number, row1: number, col2: number, row2: number): void {
+    this.grid[row1][col1].connect(this.grid[row2][col2]);
+  }
+
+  public removeConnection(col1: number, row1: number, col2: number, row2: number): void {
+    this.grid[row1][col1].disconnect(this.grid[row2][col2]);
+  }
 }
