@@ -13,8 +13,8 @@ export enum PieceType {
 
 export enum PipeConnections {
   NONE  = 0,
-  UP    = 1 << 0,
-  RIGHT = 1 << 1,
-  DOWN  = 1 << 2,
-  LEFT  = 1 << 3,
+  RIGHT = 1 << 0,
+  DOWN  = 1 << 1,
+  LEFT  = 1 << 2,
+  UP    = 1 << 3,
 }

@@ -9,10 +9,10 @@ export class PipeQueue extends GameObject{
 
   constructor(id: number) {
     super(ObjectType.PIPEQUEUE, id);
-    this.initQueue();
   }
 
-  private initQueue(): void {
+  public startQueue(): void {
+    this.pipeQ = [];
     for (let i = 0; i < GameConstants.N_PIPES_IN_QUEUE; i++) {
       this.pipeQ.push(this.generateRandomPipe());
     }

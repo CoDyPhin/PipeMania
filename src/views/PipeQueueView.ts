@@ -18,7 +18,7 @@ export class PipeQueueView {
     this.pipeQueue = pipeQueue;
     this.queueView = new PIXIGraphics();
     this.pipeQueue.addChild(this.queueView);
-    this.upNextMsg = new PIXIText({text: "<- Up next"});
+    this.upNextMsg = new PIXIText();
   }
 
   public drawPipeQueue(): void {

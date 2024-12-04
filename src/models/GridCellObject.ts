@@ -1,7 +1,8 @@
 // Project imports
 import { GameObject }            from "./GameObject";
-import { ObjectType, PieceType } from "../helpers/Enums";
+import { ObjectType, PieceType, PipeConnections } from "../helpers/Enums";
 import { Piece }                 from "./Piece";
+import { Pipe }                  from "./Pipe";
 import { GridObject } from "./GridObject";
   
   export class GridCellObject extends GameObject {
@@ -31,6 +32,16 @@ import { GridObject } from "./GridObject";
 
     public getNeighbors(): Set<{col: number, row: number}> {
       return this.neighbors;
+    }
+
+    public clearNeighbors(): void {
+      this.neighbors.clear();
+    }
+
+    public setFlowPercentage(direction: PipeConnections, percentage: number): void {
+      if (this.piece.getPieceType() !== PieceType.PIPE) return;
+      const pipe = this.piece as Pipe;
+      pipe.setFlowPercentage(direction, percentage);
     }
 
     public connect(cell: GridCellObject): void {
