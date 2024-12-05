@@ -39,7 +39,7 @@ export class GameConstants {
   public static readonly PIPE_QUEUE_BG_COLOR:      number  = Color.DARK_GRAY;
   public static readonly PIPE_QUEUE_BORDER_COLOR:  number  = Color.BLACK;
   public static readonly WATER_FLOW_START_SECONDS: number  = 3;
-  public static readonly WATER_FLOW_INTERVAL:      number  = 2;
+  public static readonly WATER_FLOW_INTERVAL:      number  = 3;
   public static readonly MINIMUM_PATH_LENGTH:      number  = 5;
   public static readonly MAXIMUM_PATH_LENGTH:      number  = 20;
 }

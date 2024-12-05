@@ -22,6 +22,9 @@ export class GridController {
   private pipeQueueView:     PipeQueueView;
   private currentCell:       GridCellObject | undefined;
   private selectedDirection: PipeConnections = PipeConnections.NONE;
+  private nextCell:          GridCellObject | undefined;
+  private lastFlowFloor:     number = 0;
+  private nodeCount:         number = 0;
 
   constructor() {
     const gridObj  = ObjectFactory.createGrid(GameConstants.GRID_SIZE);
@@ -52,6 +55,7 @@ export class GridController {
   }
 
   public onGameStart(): void {
+    this.nodeCount = 0;
     this.generateLevel();
     this.pipeQueue.startQueue();
     this.gridView.drawGrid();
@@ -59,19 +63,95 @@ export class GridController {
 
   }
 
-  public flowWater(elapsedFlowTime: number): number {
-    const flowPercentage = elapsedFlowTime % GameConstants.WATER_FLOW_INTERVAL;
-    console.log("Flow Percentage: " + flowPercentage);
-    if (!this.currentCell) throw new Error("Current flow cell is not set");
+  private moveToNextCell(): boolean {
+    if (!this.nextCell) throw new Error("Next cell is not set");
+
+    if (this.nextCell.getPiece().getPieceType() !== PieceType.PIPE) return false;
+
+    const coordsKey = JSON.stringify({col: this.nextCell.getCol(), row: this.nextCell.getRow()});
+    if (!(this.currentCell!.getNeighbors().has(coordsKey))) return false;
+
+    this.currentCell!.setFlowPercentage(this.selectedDirection, 1);
+    this.selectedDirection = this.getOppositeDirection(this.selectedDirection);
+    this.currentCell       = this.nextCell;
+    this.nextCell          = undefined;
+    return true;
+  }
+
+  private selectNextCell(): boolean {
     const cell = this.currentCell;
+    if (!cell) throw new Error("Current cell is not set");
+
+    const neighborSet = cell.getNeighbors().values();
+    const possibleCells = new Map<string, {col: number, row: number}>();
+
     const pipe = cell.getPiece() as Pipe;
-    if (pipe.getNumberOfConnections() === 1) {
-      // Start cell
-      cell.setFlowPercentage(this.selectedDirection, flowPercentage % 2);
-      this.gridView.drawGrid();
+    let mask   = pipe.getPipeConnections();
+    mask       &= ~this.selectedDirection;
+    for (let i = 0; i < GameConstants.N_DIRECTIONS; ++i) {
+      const direction = 1 << i;
+      if (mask & direction) {
+        const {colDiff, rowDiff} = this.getConnectionCoords(direction);
+        const col = cell.getCol() + colDiff;
+        const row = cell.getRow() + rowDiff;
+        if (this.isInBounds(col, row)) possibleCells.set(JSON.stringify({col, row}), {col, row});
+      }
+    }
+
+    for (const neighbor of neighborSet) {
+      const neighborCell = this.gridModel.getCell(neighbor.col, neighbor.row);
+      const direction    = this.getDirectionFromCoords(neighbor.col - cell.getCol(), neighbor.row - cell.getRow());
+      if (neighborCell.getPiece().getPieceType() === PieceType.PIPE) {
+        const pipe = neighborCell.getPiece() as Pipe;
+        if (pipe.getFlowPercentages().get(direction) === 0){
+          this.selectedDirection = direction;
+          this.nextCell          = neighborCell;
+          return true;
+        }
+        else possibleCells.delete(JSON.stringify(neighbor));
+      }
+      else possibleCells.delete(JSON.stringify(neighbor));
     }
     
-    return 1;
+    const neighbor = possibleCells.values().next().value;
+    if (neighbor === undefined) return false;
+
+    const neighborCell     = this.gridModel.getCell(neighbor.col, neighbor.row);
+    this.selectedDirection = this.getDirectionFromCoords(cell.getCol() - neighbor.col, cell.getRow() - neighbor.row);
+    this.nextCell          = neighborCell;
+    return true;
+  }
+
+  public flowWater(elapsedFlowTime: number): number {
+    if (!this.currentCell) throw new Error("Current flow cell is not set");
+    const cell        = this.currentCell;
+    cell.interactive  = false;
+    if (cell.getPiece().getPieceType() !== PieceType.PIPE) return -1;
+
+    const pipe = cell.getPiece() as Pipe;
+    const isStartCell = pipe.getNumberOfConnections() === 1;
+
+    if (isStartCell) elapsedFlowTime += GameConstants.WATER_FLOW_INTERVAL / 2;
+    else elapsedFlowTime -= GameConstants.WATER_FLOW_INTERVAL / 2;
+    const intervalPercentage = elapsedFlowTime % GameConstants.WATER_FLOW_INTERVAL;
+    let flowPercentage = intervalPercentage * 2 / GameConstants.WATER_FLOW_INTERVAL; 
+
+    if (Math.floor(flowPercentage) !== this.lastFlowFloor) {
+      if (flowPercentage >= 1 && !this.nextCell) {
+        if (!this.selectNextCell()) return -1;
+      } 
+      else if (flowPercentage < 1 || flowPercentage >= 2) {
+        if (!this.moveToNextCell()) return -1;
+        else ++this.nodeCount;
+      }
+    }
+
+    this.lastFlowFloor = Math.floor(flowPercentage);
+
+    cell.setFlowPercentage(this.selectedDirection, flowPercentage);
+    this.gridView.drawGrid();
+
+    return this.nodeCount;
   }
 
   private setupGrid(cols: number, rows: number): void {
@@ -116,6 +196,7 @@ export class GridController {
   private generateLevel(): void {
     // Generate start piece
     const {col: startCol, row: startRow, direction: startDir } = this.generateStartPiece();
+    this.lastFlowFloor = 1;
 
     const conDiff                        = this.getConnectionCoords(startDir);
     const adjacentCol                    = startCol + conDiff.colDiff;
@@ -132,8 +213,12 @@ export class GridController {
           this.currentCell = cell;
           continue;
         }
-        else if ((row === adjacentRow && col === adjacentCol)) continue;
+        else if ((row === adjacentRow && col === adjacentCol)){
+          this.nextCell = cell;
+          continue;
+        }
         cell.setPiece(new Piece(PieceType.NONE));
+        cell.interactive = true;
         availablePositions.push({col, row});
       }
     }
@@ -178,15 +263,22 @@ export class GridController {
     const connections = (cell.getPiece() as Pipe).getPipeConnections();
     for (let mainDir = 0; mainDir < GameConstants.N_DIRECTIONS; ++mainDir) {
       const direction = 1 << mainDir;
-      if (!(connections & direction)) continue;
-
       const {colDiff, rowDiff} = this.getConnectionCoords(direction);
+      
       if (!this.isInBounds(cell.getCol() + colDiff, cell.getRow() + rowDiff)) continue;
       
       const neighbor = this.gridModel.getCell(cell.getCol() + colDiff, cell.getRow() + rowDiff);
+      
+      if (!(connections & direction)) {
+        cell.disconnect(neighbor);
+        continue;  
+      }
+      
       if (neighbor.getPiece().getPieceType() === PieceType.PIPE) {
-        const oppositeDir  = this.getOppositeDirection(direction);
-        if ((neighbor.getPiece() as Pipe).getPipeConnections() & oppositeDir) cell.connect(neighbor);
+        const oppositeDir = this.getOppositeDirection(direction);
+        if ((neighbor.getPiece() as Pipe).getPipeConnections() & oppositeDir) {
+          cell.connect(neighbor);
+        }
         else cell.disconnect(neighbor);
       }
     }

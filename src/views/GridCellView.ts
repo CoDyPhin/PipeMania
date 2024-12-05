@@ -65,17 +65,42 @@ export class GridCellView {
       const pipeWidth  = this.finalX / 2;
       const pipeHeight = GameConstants.PIPE_SIZE * this.finalY;
       const startY     = (this.finalY - pipeHeight) / 2;
+      const ratio      = colorMap.get(PipeConnections.LEFT) || 0;
       
       // Draw pipe part
       this.cell.rect(startX, startY, pipeWidth, pipeHeight);
-      this.cell.fill(pipeColor);
-      
-      // Draw water part
-      const ratio      = colorMap.get(PipeConnections.LEFT) || 0;
-      const splitWidth = pipeWidth * (ratio % 1);
-      const waterX     = ratio <= 1 ? pipeWidth - splitWidth : startX;
-      this.cell.rect(waterX, startY, splitWidth, pipeHeight);
-      this.cell.fill(GameConstants.WATER_COLOR);
+      if (ratio === 1) this.cell.fill(GameConstants.WATER_COLOR);
+      else {
+        this.cell.fill(pipeColor);
+
+        // Draw water part
+        const splitWidth = pipeWidth * (ratio % 1);
+        const waterX     = ratio > 1 ? pipeWidth - splitWidth : startX;
+        this.cell.rect(waterX, startY, splitWidth, pipeHeight);
+        this.cell.fill(GameConstants.WATER_COLOR);
+      }
+    }
+
+    if (pipe.getPipeConnections() & PipeConnections.UP) {
+      const startY     = 0;
+      const pipeHeight = this.finalY / 2;
+      const pipeWidth  = GameConstants.PIPE_SIZE * this.finalX;
+      const startX     = (this.finalX - pipeWidth) / 2;
+      const ratio       = colorMap.get(PipeConnections.UP) || 0;
+
+      // Draw the pipe part
+      this.cell.rect(startX, startY, pipeWidth, pipeHeight);
+
+      if (ratio === 1) this.cell.fill(GameConstants.WATER_COLOR);
+      else {
+        this.cell.fill(pipeColor);
+
+        // Draw the water part
+        const splitHeight = pipeHeight * (ratio % 1);
+        const waterY      = ratio > 1 ? pipeHeight - splitHeight : startY;
+        this.cell.rect(startX, waterY, pipeWidth, splitHeight);
+        this.cell.fill(GameConstants.WATER_COLOR);
+      }
     }
     
     if (pipe.getPipeConnections() & PipeConnections.RIGHT) {
@@ -83,35 +108,20 @@ export class GridCellView {
       const pipeWidth  = this.finalX / 2;
       const pipeHeight = GameConstants.PIPE_SIZE * this.finalY;
       const startY     = (this.finalY - pipeHeight) / 2;
+      const ratio      = colorMap.get(PipeConnections.RIGHT) || 0;
 
       // Draw pipe part
       this.cell.rect(startX, startY, pipeWidth, pipeHeight);
-      this.cell.fill(pipeColor);
+      if (ratio === 1) this.cell.fill(GameConstants.WATER_COLOR);
+      else {
+        this.cell.fill(pipeColor);
 
-      // Draw water part
-      const ratio      = colorMap.get(PipeConnections.RIGHT) || 0;
-      const splitWidth = pipeWidth * (ratio % 1);
-      const waterX     = ratio <= 1 ? startX : startX + (pipeWidth - splitWidth);
-      this.cell.rect(waterX, startY, splitWidth, pipeHeight);
-      this.cell.fill(GameConstants.WATER_COLOR);
-    }
-    
-    if (pipe.getPipeConnections() & PipeConnections.UP) {
-      const startY     = 0;
-      const pipeHeight = this.finalY / 2;
-      const pipeWidth  = GameConstants.PIPE_SIZE * this.finalX;
-      const startX     = (this.finalX - pipeWidth) / 2;
-
-      // Draw the pipe part
-      this.cell.rect(startX, startY, pipeWidth, pipeHeight);
-      this.cell.fill(pipeColor);
-
-      // Draw the water part
-      const ratio       = colorMap.get(PipeConnections.UP) || 0;
-      const splitHeight = pipeHeight * (ratio % 1);
-      const waterY      = ratio <= 1 ? pipeHeight - splitHeight : startY;
-      this.cell.rect(startX, waterY, pipeWidth, splitHeight);
-      this.cell.fill(GameConstants.WATER_COLOR);
+        // Draw water part
+        const splitWidth = pipeWidth * (ratio % 1);
+        const waterX     = ratio > 1 ? startX : startX + (pipeWidth - splitWidth);
+        this.cell.rect(waterX, startY, splitWidth, pipeHeight);
+        this.cell.fill(GameConstants.WATER_COLOR);
+      }
     }
     
     if (pipe.getPipeConnections() & PipeConnections.DOWN) {
@@ -119,17 +129,21 @@ export class GridCellView {
       const pipeHeight = this.finalY / 2;
       const pipeWidth  = GameConstants.PIPE_SIZE * this.finalX;
       const startX     = (this.finalX - pipeWidth) / 2;
+      const ratio       = colorMap.get(PipeConnections.DOWN) || 0;
 
       // Draw the pipe part
       this.cell.rect(startX, startY, pipeWidth, pipeHeight);
-      this.cell.fill(pipeColor);
 
-      // Draw the water part
-      const ratio       = colorMap.get(PipeConnections.DOWN) || 0;
-      const splitHeight = pipeHeight * (ratio % 1);
-      const waterY      = ratio <= 1 ? startY : startY + (pipeHeight - splitHeight);
-      this.cell.rect(startX, waterY, pipeWidth, splitHeight);
-      this.cell.fill(GameConstants.WATER_COLOR);
+      if (ratio === 1) this.cell.fill(GameConstants.WATER_COLOR);
+      else {
+        this.cell.fill(pipeColor);
+
+        // Draw the water part
+        const splitHeight = pipeHeight * (ratio % 1);
+        const waterY      = ratio >= 1 ? startY : startY + (pipeHeight - splitHeight);
+        this.cell.rect(startX, waterY, pipeWidth, splitHeight);
+        this.cell.fill(GameConstants.WATER_COLOR);
+      }
     }
   }
 }

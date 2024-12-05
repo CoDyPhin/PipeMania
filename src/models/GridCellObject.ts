@@ -8,7 +8,7 @@ import { GridObject } from "./GridObject";
   export class GridCellObject extends GameObject {
     private piece:     Piece  = new Piece(PieceType.NONE);
     private coords:    {col: number; row: number};
-    private neighbors: Set<{col: number, row: number}> = new Set();
+    private neighbors: Map<string, {col: number, row: number}> = new Map();
     private mainGrid:  GridObject;
 
     constructor(id: number, col: number, row: number, mainGrid: GridObject) {
@@ -30,7 +30,7 @@ import { GridObject } from "./GridObject";
       return this.mainGrid;
     }
 
-    public getNeighbors(): Set<{col: number, row: number}> {
+    public getNeighbors(): Map<string, {col: number, row: number}> {
       return this.neighbors;
     }
 
@@ -45,14 +45,14 @@ import { GridObject } from "./GridObject";
     }
 
     public connect(cell: GridCellObject): void {
-      if (this.neighbors.has(cell.coords)) return;
-      this.neighbors.add(cell.coords);
+      if (this.neighbors.has(JSON.stringify(cell.coords))) return;
+      this.neighbors.set(JSON.stringify(cell.coords), cell.coords);
       cell.connect(this);
     }
 
     public disconnect(cell: GridCellObject): void {
-      if (!this.neighbors.has(cell.coords)) return;
-      this.neighbors.delete(cell.coords);
+      if (!this.neighbors.has(JSON.stringify(cell.coords))) return;
+      this.neighbors.delete(JSON.stringify(cell.coords));
       cell.disconnect(this);
     }
 
