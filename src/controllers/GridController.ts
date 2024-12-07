@@ -232,11 +232,13 @@ export class GridController {
           continue;
         }
         else if ((row === adjacentRow && col === adjacentCol)){
-          this.nextCell = cell;
+          cell.setPiece(new Piece(PieceType.NONE));
+          cell.interactive = true;
+          this.nextCell    = cell;
           continue;
         }
         else availablePositions.push({col, row});
-        
+
         cell.setPiece(new Piece(PieceType.NONE));
         cell.interactive = true;
       }

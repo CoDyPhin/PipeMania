@@ -35,6 +35,7 @@ export class UIView {
     const fontSize  = GameConstants.UI_SIZE / 2 * Math.min(canvasHeight, canvasWidth) * 0.5;
     const timer     = this.uiModel.getTimer();
     const nodesLeft = this.uiModel.getNodesLeft();
+    
     this.timerText  = new PIXIText({text: "Time Left: " + timer, style: {fontSize: fontSize}});
     this.uiModel.addChild(this.timerText);
 
