@@ -14,12 +14,10 @@ export class GridObject extends GameObject {
     super(ObjectType.GRID, id);
     this.size = size;
     this.x = (1 - this.size) * GameView.getInstance().getApp().renderer.width;
-    //this.y = (1 - this.size) * GameView.getInstance().getApp().renderer.height;
   }
 
   public onResize(): void {
     this.x = (1 - this.size) * GameView.getInstance().getApp().renderer.width;
-    //this.y = (1 - this.size) * GameView.getInstance().getApp().renderer.height;
   }
 
   public getViewSize(): number {

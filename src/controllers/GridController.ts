@@ -88,12 +88,15 @@ export class GridController {
     const pipe = cell.getPiece() as Pipe;
     let mask   = pipe.getPipeConnections();
     mask       &= ~this.selectedDirection;
+
     for (let i = 0; i < GameConstants.N_DIRECTIONS; ++i) {
       const direction = 1 << i;
+
       if (mask & direction) {
         const {colDiff, rowDiff} = this.getConnectionCoords(direction);
         const col = cell.getCol() + colDiff;
         const row = cell.getRow() + rowDiff;
+
         if (this.isInBounds(col, row)) {
           if (this.gridModel.getCell(col, row).getPiece().getPieceType() === PieceType.BLOCK) continue;
           possibleCells.set(JSON.stringify({col, row}), {col, row});
@@ -105,6 +108,7 @@ export class GridController {
       const neighborCell = this.gridModel.getCell(neighbor.col, neighbor.row);
       const selDirection = this.getDirectionFromCoords(neighbor.col - cell.getCol(), neighbor.row - cell.getRow());
       const oppDirection = this.getOppositeDirection(selDirection);
+
       if (neighborCell.getPiece().getPieceType() === PieceType.PIPE) {
         const neighborPipe = neighborCell.getPiece() as Pipe;
         if (neighborPipe.getFlowPercentages().get(oppDirection) === 0){
@@ -130,8 +134,10 @@ export class GridController {
 
   public flowWater(elapsedFlowTime: number): number {
     if (!this.currentCell) throw new Error("Current flow cell is not set");
+
     let cell         = this.currentCell;
     cell.interactive = false;
+
     if (cell.getPiece().getPieceType() !== PieceType.PIPE) return -1;
 
     const pipe = cell.getPiece() as Pipe;
@@ -139,6 +145,7 @@ export class GridController {
 
     if (isStartCell) elapsedFlowTime += GameConstants.WATER_FLOW_INTERVAL / 2;
     else elapsedFlowTime -= GameConstants.WATER_FLOW_INTERVAL / 2;
+
     const intervalPercentage = elapsedFlowTime % GameConstants.WATER_FLOW_INTERVAL;
     let flowPercentage = intervalPercentage * 2 / GameConstants.WATER_FLOW_INTERVAL; 
 
@@ -163,8 +170,10 @@ export class GridController {
 
   private setupGrid(cols: number, rows: number): void {
     let grid = new Array<Array<GridCellObject>>();
+
     for (let rowID = 0; rowID < rows; ++rowID) {
       grid.push(new Array());
+
       for (let colID = 0; colID < cols; ++colID) {
         const obj = ObjectFactory.createGridCell(colID, rowID, this.gridModel);
         ObjectManager.getInstance().addObject(obj);
@@ -176,10 +185,10 @@ export class GridController {
   }
 
   private generateStartPiece(): {col: number, row: number, direction: PipeConnections} {
-    const startCol      = Math.floor(Math.random() * (GameConstants.GRID_COLS - 2)) + 1;
-    const startRow      = Math.floor(Math.random() * (GameConstants.GRID_ROWS - 2)) + 1;
-    const pipeDirection = Math.floor(Math.random() * GameConstants.N_DIRECTIONS);
-    const directionMask = (1 << pipeDirection);
+    const startCol         = Math.floor(Math.random() * (GameConstants.GRID_COLS - 2)) + 1;
+    const startRow         = Math.floor(Math.random() * (GameConstants.GRID_ROWS - 2)) + 1;
+    const pipeDirection    = Math.floor(Math.random() * GameConstants.N_DIRECTIONS);
+    const directionMask    = (1 << pipeDirection);
     this.selectedDirection = directionMask;
     return { col: startCol, row: startRow, direction: directionMask };
   }
@@ -191,7 +200,8 @@ export class GridController {
     for (let i = 0; i < nBlocks; ++i) {
       const randomIndex = Math.floor(Math.random() * availablePositions.length);
       const {col, row}  = availablePositions[randomIndex];
-      const cell = this.gridModel.getCell(col, row);
+      let cell          = this.gridModel.getCell(col, row);
+
       cell.setPiece(new Piece(PieceType.BLOCK));
       cell.interactive = false;
 
@@ -212,8 +222,9 @@ export class GridController {
     let availablePositions = [];
     for (let row = 0; row < GameConstants.GRID_ROWS; ++row) {
       for (let col = 0; col < GameConstants.GRID_COLS; ++col) {
-        const cell = this.gridModel.getCell(col, row) as GridCellObject;
+        let cell = this.gridModel.getCell(col, row);
         cell.clearNeighbors();
+
         if (row === startRow && col === startCol) {
           cell.setPiece(new Pipe(startDir));
           cell.interactive = false;
@@ -225,6 +236,7 @@ export class GridController {
           continue;
         }
         else availablePositions.push({col, row});
+        
         cell.setPiece(new Piece(PieceType.NONE));
         cell.interactive = true;
       }

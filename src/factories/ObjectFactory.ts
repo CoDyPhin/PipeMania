@@ -4,6 +4,7 @@ import { GameObject }     from "../models/GameObject";
 import { GridObject }     from "../models/GridObject";
 import { GridCellObject } from "../models/GridCellObject";
 import { PipeQueue }      from "../models/PipeQueue";
+import { UIObject }       from "../models/UIObject";
 
 export class ObjectFactory {
   private static objectIDMap: Map<ObjectType, number> = new Map();
@@ -28,6 +29,14 @@ export class ObjectFactory {
     let currentID = ObjectFactory.objectIDMap.has(ObjectType.PIPEQUEUE) ? ObjectFactory.objectIDMap.get(ObjectType.PIPEQUEUE)! : 1;
     const object  = new PipeQueue(currentID);
     ObjectFactory.objectIDMap.set(ObjectType.PIPEQUEUE, ++currentID);
+
+    return object;
+  }
+
+  public static createUI(): GameObject {
+    let currentID = ObjectFactory.objectIDMap.has(ObjectType.UI) ? ObjectFactory.objectIDMap.get(ObjectType.UI)! : 1;
+    const object  = new UIObject(currentID);
+    ObjectFactory.objectIDMap.set(ObjectType.UI, ++currentID);
 
     return object;
   }

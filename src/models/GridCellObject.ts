@@ -1,9 +1,14 @@
 // Project imports
+import { 
+  ObjectType, 
+  PieceType,
+  PipeConnections 
+} from "../helpers/Enums";
+
 import { GameObject }            from "./GameObject";
-import { ObjectType, PieceType, PipeConnections } from "../helpers/Enums";
 import { Piece }                 from "./Piece";
 import { Pipe }                  from "./Pipe";
-import { GridObject } from "./GridObject";
+import { GridObject }            from "./GridObject";
   
   export class GridCellObject extends GameObject {
     private piece:     Piece  = new Piece(PieceType.NONE);
@@ -13,9 +18,9 @@ import { GridObject } from "./GridObject";
 
     constructor(id: number, col: number, row: number, mainGrid: GridObject) {
       super(ObjectType.GRID_CELL, id);
-      this.coords = {col, row};
+      this.coords      = {col, row};
       this.interactive = true;
-      this.mainGrid = mainGrid;
+      this.mainGrid    = mainGrid;
     }
 
     public getCol(): number {

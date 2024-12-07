@@ -1,8 +1,8 @@
 export enum ObjectType {
-  BASIC     = "Basic",
   GRID      = "Grid",
   GRID_CELL = "GridCell",
   PIPEQUEUE = "PipeQueue",
+  UI        = "UI"
 }
 
 export enum PieceType {

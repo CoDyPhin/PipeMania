@@ -29,10 +29,10 @@ export class PipeQueueView {
     const canvasWidth     = app.renderer.width;
     const canvasHeight    = app.renderer.height;
     
-    const pipeQueueWidth  = canvasWidth  * GameConstants.PIPE_QUEUE_SIZE;
-    const pipeQueueHeight = canvasHeight * GameConstants.PIPE_QUEUE_SIZE;
+    const pipeQueueWidth  = canvasWidth  * GameConstants.PIPE_QUEUE_WIDTH;
+    const pipeQueueHeight = canvasHeight * GameConstants.PIPE_QUEUE_HEIGHT;
     const pipeCellWidth   = pipeQueueWidth / GameConstants.N_PIPES_IN_QUEUE;
-    const pipeCellHeight  = pipeQueueHeight / GameConstants.N_PIPES_IN_QUEUE;
+    const pipeCellHeight  = pipeQueueHeight / (GameConstants.N_PIPES_IN_QUEUE * 2);
     
     const xBorder         = pipeCellWidth  * GameConstants.PIPE_QUEUE_BORDER_SIZE;
     const yBorder         = pipeCellHeight * GameConstants.PIPE_QUEUE_BORDER_SIZE;
@@ -43,7 +43,7 @@ export class PipeQueueView {
     this.pipeQueue.addChild(this.upNextMsg);
 
     this.pipeQueue.getQueue().forEach((pipe, index) => {
-      const cellY   = index * pipeCellHeight;
+      const cellY   = index * 2 * pipeCellHeight;
       const centerX = pipeCellWidth  / 2;
       const centerY = pipeCellHeight / 2;
       this.queueView.rect(0, cellY, pipeCellWidth, pipeCellHeight);

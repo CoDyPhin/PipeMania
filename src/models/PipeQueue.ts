@@ -1,8 +1,8 @@
 // Project imports
 import { GameConstants } from '../helpers/GameConstants';
-import { Pipe } from './Pipe';
-import { GameObject } from './GameObject';
-import { ObjectType } from '../helpers/Enums';
+import { Pipe }          from './Pipe';
+import { GameObject }    from './GameObject';
+import { ObjectType }    from '../helpers/Enums';
 
 export class PipeQueue extends GameObject{
   private pipeQ: Array<Pipe> = new Array<Pipe>();
@@ -34,11 +34,15 @@ export class PipeQueue extends GameObject{
   }
 
   private generateRandomPipe(): Pipe {
-    let bitmask = (1 << GameConstants.N_DIRECTIONS) - 1;
-    const bitsToFlip = Math.floor(Math.random() * (GameConstants.N_DIRECTIONS - 1));
+    let bitmask       = (1 << GameConstants.N_DIRECTIONS) - 1;
+    let availableBits = Array.from({length: GameConstants.N_DIRECTIONS}, (_, i) => i);
+    const bitsToFlip  = Math.floor(Math.random() * (GameConstants.N_DIRECTIONS - 1));
+
     for (let i = 0; i < bitsToFlip; i++) {
-      const randomBit = Math.floor(Math.random() * GameConstants.N_DIRECTIONS);
-      bitmask &= ~(1 << randomBit);
+      const randomBit = Math.floor(Math.random() * availableBits.length);
+      bitmask &= ~(1 << availableBits[randomBit]);
+      availableBits[randomBit] = availableBits[availableBits.length - 1];
+      availableBits.pop();
     }
     return new Pipe(bitmask);
   }

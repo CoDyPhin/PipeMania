@@ -27,6 +27,7 @@ export class GameConstants {
   public static readonly GRID_CELL_BORDER:         number  = 0.1;
   public static readonly GRID_SIZE:                number  = 0.7;
   public static readonly PIPE_SIZE:                number  = 0.25;
+  public static readonly UI_SIZE:                  number  = 0.1;
   public static readonly PIPE_COLOR:               number  = Color.PURPLE;
   public static readonly START_PIPE_COLOR:         number  = Color.YELLOW;
   public static readonly WATER_COLOR:              number  = Color.BLUE;
@@ -34,7 +35,8 @@ export class GameConstants {
   public static readonly N_DIRECTIONS:             number  = 4;
   public static readonly MAX_BLOCKS:               number  = 10;
   public static readonly N_PIPES_IN_QUEUE:         number  = 4;
-  public static readonly PIPE_QUEUE_SIZE:          number  = 0.2;
+  public static readonly PIPE_QUEUE_HEIGHT:        number  = 0.4;
+  public static readonly PIPE_QUEUE_WIDTH:         number  = 0.1;
   public static readonly PIPE_QUEUE_BORDER_SIZE:   number  = 0.1;
   public static readonly PIPE_QUEUE_BG_COLOR:      number  = Color.DARK_GRAY;
   public static readonly PIPE_QUEUE_BORDER_COLOR:  number  = Color.BLACK;

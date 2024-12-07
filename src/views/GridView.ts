@@ -14,6 +14,7 @@ export class GridView {
     
     grid.forEach((row, rowID) => {
       this.gridView.push(new Array());
+
       row.forEach(cell => {
         const view = new GridCellView(cell, cellFrac, cellFrac, GameConstants.GRID_CELL_BORDER);
         this.gridView[rowID].push(view);
@@ -23,6 +24,7 @@ export class GridView {
 
   public drawGrid(): void {
     this.gridView.forEach(row => {
+      
       row.forEach(cell => {
         cell.drawCell();
       });
